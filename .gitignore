@@ -1,3 +1,5 @@
 .venv
 *.lock
 AutogluonModels
+mlartifacts
+mlflow.db
