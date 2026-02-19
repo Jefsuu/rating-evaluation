@@ -1,0 +1,59 @@
+networks:
+  app-tier:
+    driver: bridge
+
+# volumes:
+#   kafka_data:
+#     driver: local
+#   postgres_data:
+#     './volumes/postgresql_data:/bitnami/postgresql/data/'
+
+services:
+  kafka-broker:
+    image: apache/kafka:latest
+    container_name: kafka-broker
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: 3
+    ports:
+      - "9092:9092"
+    networks:
+      - app-tier
+    volumes:
+      - './volumes/kafka_data:/bitnami/kafka'
+
+  postgresql:
+    image: bitnami/postgresql
+    container_name: postgresql
+    # build:
+    #   context: .
+    #   target: postgresql
+    #   dockerfile: Dockerfile
+    volumes:
+      - './volumes/postgresql_data:/bitnami/postgresql/data/'
+    ports:
+      - '5432:5432'
+    environment:
+      #- POSTGRESQL_DATABASE=dev_db
+      - POSTGRESQL_USERNAME=dev_user
+      - POSTGRESQL_PASSWORD=1234
+      - POSTGRESQL_POSTGRES_PASSWORD=1234
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "dev_user"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    networks:
+      - app-tier
