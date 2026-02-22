@@ -1,11 +1,12 @@
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import f1_score, classification_report
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from src.preprocessing import build_vectorizer
-from src.model import build_model
 import joblib
+
+from sklearn.metrics import f1_score, classification_report
+from sklearn.model_selection import train_test_split
+from preprocessing import build_vectorizer
+from model import build_model
 
 
 def train():
