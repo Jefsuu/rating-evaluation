@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/Biggus Dickus/Documents/GitHub/rating-evaluation/mlruns/2/models/m-b4a9ea3c82544d1aa40324ee6b814c7f/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.10
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.0
+model_id: m-b4a9ea3c82544d1aa40324ee6b814c7f
+model_size_bytes: 23470
+model_uuid: m-b4a9ea3c82544d1aa40324ee6b814c7f
+prompts: null
+run_id: 28fe42183387488bb3c8fab255b5a322
+utc_time_created: '2026-02-22 00:13:51.191054'
