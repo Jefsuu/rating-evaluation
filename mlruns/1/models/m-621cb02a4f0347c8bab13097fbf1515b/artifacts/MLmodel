@@ -1,4 +1,4 @@
-artifact_path: file:C:/Users/Biggus Dickus/Documents/GitHub/rating-evaluation/mlruns/2/models/m-b4a9ea3c82544d1aa40324ee6b814c7f/artifacts
+artifact_path: /home/biggus/repos/rating-evaluation/mlruns/1/models/m-621cb02a4f0347c8bab13097fbf1515b/artifacts
 flavors:
   python_function:
     env:
@@ -7,7 +7,7 @@ flavors:
     loader_module: mlflow.sklearn
     model_path: model.pkl
     predict_fn: predict
-    python_version: 3.12.10
+    python_version: 3.12.12
   sklearn:
     code: null
     pickled_model: model.pkl
@@ -15,9 +15,9 @@ flavors:
     sklearn_version: 1.8.0
     skops_trusted_types: null
 mlflow_version: 3.10.0
-model_id: m-b4a9ea3c82544d1aa40324ee6b814c7f
+model_id: m-621cb02a4f0347c8bab13097fbf1515b
 model_size_bytes: 23470
-model_uuid: m-b4a9ea3c82544d1aa40324ee6b814c7f
+model_uuid: m-621cb02a4f0347c8bab13097fbf1515b
 prompts: null
-run_id: 28fe42183387488bb3c8fab255b5a322
-utc_time_created: '2026-02-22 00:13:51.191054'
+run_id: ee5545269bbe44f4b434d1dafeb68f57
+utc_time_created: '2026-02-22 19:56:51.232137'
