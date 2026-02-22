@@ -1,0 +1,41 @@
+services:
+
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    container_name: mlflow_server
+    ports:
+      - "5000:5000"
+    volumes:
+      - mlflow_data:/mlruns
+      - mlflow_db:/mlflow
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlruns
+      --host 0.0.0.0
+      --port 5000
+    networks:
+      - mlops_net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.serve
+    container_name: sentiment_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mlflow
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    networks:
+      - mlops_net
+
+volumes:
+  mlflow_data:
+  mlflow_db:
+
+networks:
+  mlops_net:
