@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiokafka>=0.13.0",
     "autogluon>=1.5.0",
+    "confluent-kafka>=2.13.0",
     "flaml>=2.5.0",
     "ipykernel>=7.1.0",
     "ipywidgets>=8.1.8",
@@ -14,5 +16,6 @@ dependencies = [
     "langchain-ollama>=1.0.1",
     "mlflow>=3.9.0",
     "pandas>=2.3.3",
+    "psycopg2-binary>=2.9.11",
     "pygraphviz>=1.14",
 ]
