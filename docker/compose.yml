@@ -1,6 +1,7 @@
 networks:
   app-tier:
     driver: bridge
+  mlops_net:
 
 # volumes:
 #   kafka_data:
@@ -57,11 +58,40 @@ services:
       start_period: 5s
     networks:
       - app-tier
+  
+#   mlflow:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.mlflow
+#     container_name: mlflow_server
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - mlflow_data:/mlruns
+#       - mlflow_db:/mlflow
+#     command: >
+#       mlflow server
+#       --backend-store-uri sqlite:////mlflow/mlflow.db
+#       --default-artifact-root /mlruns
+#       --host 0.0.0.0
+#       --port 5000
+#     networks:
+#       - mlops_net
 
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:latest
-    ports:
-      - 8080:8080
-    environment:
-      DYNAMIC_CONFIG_ENABLED: 'true'
+#   api:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.serve
+#     container_name: sentiment_api
+#     ports:
+#       - "8000:8000"
+#     depends_on:
+#       - mlflow
+#     environment:
+#       - MLFLOW_TRACKING_URI=http://mlflow:5000
+#     networks:
+#       - mlops_net
+
+# volumes:
+#   mlflow_data:
+#   mlflow_db:

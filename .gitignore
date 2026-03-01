@@ -6,3 +6,5 @@ mlflow.db
 AutogluonModels
 mlruns
 models
+backups
+docker/volumes
