@@ -1,3 +1,8 @@
 .venv
 *.lock
 *C:
+AutogluonModels
+mlartifacts
+mlflow.db
+mlruns
+models
