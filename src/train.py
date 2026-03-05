@@ -7,6 +7,12 @@ from sklearn.metrics import f1_score, classification_report
 from sklearn.model_selection import train_test_split
 from preprocessing import build_vectorizer
 from model import build_model
+import os
+
+os.environ["MLFLOW_S3_ENDPOINT_URL"] = "http://localhost:9000"
+os.environ["AWS_ACCESS_KEY_ID"] = "minioadmin"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "minioadmin"
+# os.environ["AWS_DEFAULT_REGION"] = "my_region"
 
 
 def train():
@@ -16,7 +22,7 @@ def train():
     mlflow.set_experiment("Sentiment-Analysis")
 
     # Carregar dados
-    df = pd.read_csv("data/reviews_1.csv")
+    df = pd.read_sql_table("reviews", "postgresql://dev_user:1234@localhost:5432/reviews_dev")
 
     df["sentiment"] = df["type"].map({
         "Positive": 1,
@@ -63,9 +69,9 @@ def train():
             registered_model_name="SentimentModel"
         )
 
-    # Salvar localmente também
-    joblib.dump(model, "models/model.pkl")
-    joblib.dump(vectorizer, "models/vectorizer.pkl")
+    # # Salvar localmente também
+    # joblib.dump(model, "models/model.pkl")
+    # joblib.dump(vectorizer, "models/vectorizer.pkl")
 
     print("Treinamento finalizado.")
 
