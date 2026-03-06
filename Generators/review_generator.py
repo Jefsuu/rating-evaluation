@@ -25,12 +25,12 @@ models = [
 
 fila = Queue(100)
 
-df = pd.read_csv('data/produtcs.csv')
+df = pd.read_sql_table("produtcs", "postgresql://dev_user:1234@localhost:5432/reviews")
 products = df.values
 
 with ThreadPoolExecutor(max_workers=len(models)) as executor:
 	while True:
-		futures = [executor.submit(generate_review, model, products) for model in models]
+		futures = [executor.submit(generate_review, model, products, True) for model in models]
 		for future in as_completed(futures):
 			review = future.result()
 			
