@@ -77,15 +77,51 @@ services:
       --default-artifact-root s3://mlflow
       --host 0.0.0.0
       --port 5000
+      --cors-allowed-origins '*'
+      --allowed-hosts '*'
     networks:
       - app-tier
     environment:
-      - MLFLOW_S3_ENDPOINT_URL=localhost:9000
-      - AWS_DEFAULT_REGION=my_region
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      # - AWS_DEFAULT_REGION=sa-east-1
       # - MLFLOW_S3_IGNORE_TLS=true
       - AWS_ACCESS_KEY_ID=minioadmin
       - AWS_SECRET_ACCESS_KEY=minioadmin
-  
+    depends_on:
+      - minio
+    
+  model-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    container_name: mlflow_model_server
+    ports:
+      - "5001:5001"
+    # volumes:
+    #   - mlflow_data:/mlruns
+    #   - mlflow_db:/mlflow
+    command: >
+      mlflow models serve -m models:/SentimentModel/Production
+      --host 0.0.0.0
+      --port 5001
+    networks:
+      - app-tier
+    environment:
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - MLFLOW_TRACKING_URI=http://mlflow_server:5000
+      - MLFLOW_SERVER_ALLOWED_HOSTS='*'
+      # - AWS_DEFAULT_REGION=sa-east-1
+      # - MLFLOW_S3_IGNORE_TLS=true
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+    depends_on:
+      - mlflow
+    healthcheck:
+      test: ["CMD", "curl", "-v", "http://localhost:5001/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 60
+
   minio:
     image: minio/minio
     ports:
@@ -97,11 +133,13 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
+    networks:
+      - app-tier
 
   review_writer:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.kafka_postgres_review_writer
+      dockerfile: docker/Dockerfile.executors
     container_name: review_writer
     command: sh -c "while true; do uv run ./Executors/kafka_to_postgres_review_writer.py; sleep 300; done"
     # restart: unless-stopped
@@ -112,6 +150,30 @@ services:
       - postgresql
     networks:
       - app-tier
+  
+  review_predictor:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.executors
+    container_name: review_predictor
+    command: sh -c "while true; do uv run ./Executors/review_predict_to_postgres.py; sleep 300; done"
+    # restart: unless-stopped
+    # ports:
+    #   - "8000:8000"
+    depends_on:
+      kafka:
+        condition: service_started
+      postgresql:
+        condition: service_started
+      mlflow:
+        condition: service_started
+      minio:
+        condition: service_started
+      model-server:
+        condition: service_healthy
+    networks:
+      - app-tier
+    
 
 #   api:
 #     build:

@@ -3,8 +3,10 @@ import mlflow.sklearn
 import pandas as pd
 import joblib
 
+from sklearn import pipeline
 from sklearn.metrics import f1_score, classification_report
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from preprocessing import build_vectorizer
 from model import build_model
 import os
@@ -57,6 +59,13 @@ def train():
 
         print(classification_report(y_test, y_pred))
 
+        pipeline = Pipeline([
+        ("tfidf", vectorizer),
+        ("clf", model)
+    ])
+
+        pipeline.predict(X_train)
+
         # Logar parâmetros e métricas
         mlflow.log_param("model_type", "logistic_regression")
         mlflow.log_param("vectorizer", "tfidf")
@@ -64,7 +73,7 @@ def train():
 
         # Registrar modelo no Model Registry
         mlflow.sklearn.log_model(
-            sk_model=model,
+            sk_model=pipeline,
             name="model",
             registered_model_name="SentimentModel"
         )
