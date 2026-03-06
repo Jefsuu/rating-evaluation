@@ -37,7 +37,7 @@ conn_params = {
 }
 
 conf = {
-		'bootstrap.servers': 'kafka-broker:9092',
+		'bootstrap.servers': 'kafka:9092',
 		'group.id': 'review-group',
 		'auto.offset.reset': 'earliest',  # earliest | latest
 		'enable.auto.commit': False

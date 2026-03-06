@@ -135,7 +135,7 @@ def generate_review(model, products: List[dict], prod:bool=False):
         return data
     else:
         data = {
-            "product_id": index,
+            "product_id": int(index),
 			"review":output.review,
 			"stars":output.stars
 		}

@@ -17,5 +17,5 @@ COPY __init__.py .
 ENV PYTHONPATH=/app:$PYTHONPATH
 
 
-CMD ["uv", "run", "./Executors/kafka_to_postgres_review_writer.py"]
+# CMD ["uv", "run", "./Executors/kafka_to_postgres_review_writer.py"]
 # CMD ["echo", "$PYTHONPATH"]

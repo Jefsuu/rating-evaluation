@@ -17,8 +17,8 @@ pd.options.display.max_columns = None
 
 models = [ 
             "gemma3:1b", 
-            "deepseek-r1:1.5b",
-            "qwen3:1.7b", 
+            #"deepseek-r1:1.5b",
+            #"qwen3:1.7b", 
             "granite3.3:2b", 
             "llama3.2:1b",
         ]

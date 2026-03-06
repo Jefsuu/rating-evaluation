@@ -3,7 +3,7 @@ from typing import List
 from kafka import KafkaProducer
 import json
 
-def kafka_publisher(topic: str, message: dict, bootstrap_servers: List[str] = ["localhost:9092"]):
+def kafka_publisher(topic: str, message: dict, bootstrap_servers: List[str] = ["localhost:29092"]):
     """
     Publish a message to a Kafka topic.
     
