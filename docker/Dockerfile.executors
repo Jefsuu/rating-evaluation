@@ -1,0 +1,44 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN pip install --no-cache-dir uv
+
+# instalar dependências
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libffi-dev \
+    liblzma-dev \
+    tk-dev \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# instalar pyenv
+RUN curl -fsSL https://pyenv.run | bash
+
+# configurar variáveis
+ENV PYENV_ROOT="/root/.pyenv"
+ENV PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+
+COPY ./pyproject.toml .
+# COPY ./uv.lock .
+
+RUN uv sync 
+# --frozen --no-dev --no-install-project
+
+COPY DataHandlers/ DataHandlers/
+COPY Executors/ Executors/
+COPY __init__.py .
+
+ENV PYTHONPATH=/app:$PYTHONPATH
+
+
+# CMD ["uv", "run", "./Executors/kafka_to_postgres_review_writer.py"]
+# CMD ["echo", "$PYTHONPATH"]

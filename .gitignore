@@ -1,2 +1,10 @@
 .venv
 *.lock
+mlartifacts
+mlflow.db
+*C:
+AutogluonModels
+mlruns
+models
+backups
+docker/volumes
