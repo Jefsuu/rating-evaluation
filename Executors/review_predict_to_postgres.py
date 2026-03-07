@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 engine = create_engine("postgresql://dev_user:1234@postgresql:5432/reviews")
 df_max_id = pd.read_sql_query("SELECT coalesce(max(review_id), 0) max_id FROM rated_reviews", con=engine)
 max_id = int(df_max_id.iloc[0, 0])
-df_reviews = pd.read_sql_query(f"SELECT * FROM reviews WHERE id > {max_id} ORDER BY id ASC LIMIT 1", con=engine)
+df_reviews = pd.read_sql_query(f"SELECT * FROM reviews WHERE id > {max_id} ORDER BY id ASC LIMIT 100", con=engine)
 
 session = requests.Session()
 
